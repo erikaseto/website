@@ -5,6 +5,22 @@
 html {
   scroll-behavior: smooth;
 }
+.arrow-left {
+  width: 0; 
+  height: 0; 
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-right: 12px solid blue; /* points left */
+}
+
+.arrow-right {
+  width: 0; 
+  height: 0; 
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 12px solid blue; /* points right */
+}
+
 
 /* 
 body {

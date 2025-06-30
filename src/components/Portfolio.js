@@ -107,6 +107,8 @@ const scrollToSection = (id) => {
   }
 };
 
+
+
   const experiences = [
     {
       title: "District Support Pharmacist",
@@ -207,10 +209,10 @@ const scrollToSection = (id) => {
             style={{ zIndex: 0 }}
           />
 
-          <h1 className="text-6xl font-extrabold mb-4 text-white drop-shadow-lg">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 text-white drop-shadow-lg text-center">
             Erika Seto
           </h1>
-          <p className="text-2xl font-semibold text-white drop-shadow-md">
+          <p className="text-xl sm:text-2xl font-semibold text-white drop-shadow-md text-center">
             Software Development Student
           </p>
         </section>
@@ -220,7 +222,7 @@ const scrollToSection = (id) => {
           id="about"
           ref={(el) => (sectionsRef.current["about"] = el)}
           data-aos="fade-up"
-          className="scroll-mt-16 bg-white rounded-3xl p-12 my-16 shadow-lg"
+          className="scroll-mt-16 bg-white rounded-3xl px-4 sm:px-8 py-8 sm:py-12 my-16 shadow-lg"
 
         >
           <h2 className="text-4xl font-semibold mb-4">About Me</h2>
@@ -244,7 +246,7 @@ const scrollToSection = (id) => {
           id="experience"
           ref={(el) => (sectionsRef.current["experience"] = el)}
           // data-aos="fade-up"
-          className="relative bg-white rounded-3xl px-4 py-12 my-16 shadow-lg scroll-mt-16"
+          className="scroll-mt-16 bg-white rounded-3xl px-4 sm:px-8 py-8 sm:py-12 my-16 shadow-lg"
         >
           <h2 className="text-4xl font-semibold mb-16 text-center">Experience</h2>
 
@@ -255,69 +257,87 @@ const scrollToSection = (id) => {
               style={{ backgroundColor: navColor }}
             />
 
-            {experiences.map((item, idx) => {
-              const index = idx + 1; // start at 1
-              const isLeft = index % 2 === 1;
+{experiences.map((item, idx) => {
+  const index = idx + 1;
+  const isLeft = index % 2 === 1;
 
-              return (
-                <div
-                  key={index}
-                  className={`relative flex justify-${
-                    isLeft ? "start" : "end"
-                  } mb-20 md:mb-24 w-full`}
-                  style={{ minHeight: "8rem" }}
-                >
-                  {/* Dot aligned vertically centered to the card */}
-                  <div
-                    className="absolute left-1/2 w-6 h-6 border-2 border-white rounded-full z-10"
-                    style={{
-                      top: "50%",
-                      transform: "translate(-50%, -50%)",
-                      backgroundColor: navColor,
-                    }}
-                  />
+  const containerClasses = `
+  flex items-center gap-4
+  w-full md:w-1/2 md:max-w-3xl
+  pl-14 pr-4 md:px-6
+  flex-row
+  md:${isLeft ? "flex-row ml-0 mr-auto" : "flex-row-reverse ml-auto mr-0"}
+`;
 
-                  {/* Pointer + Card container */}
-                  <div
-                    className={`flex items-center ${
-                      isLeft ? "flex-row-reverse" : "flex-row"
-                    } w-full max-w-3xl md:w-1/2 px-6`}
-                    style={{ gap: "1rem" }}
-                  >
-                    {/* Pointer triangle aligned vertically center with dot */}
-                    <div
-                      className={`w-0 h-0 border-y-[12px] border-y-transparent z-10 self-center ${
-                        isLeft ? "border-l-[12px]" : "border-r-[12px]"
-                      }`}
-                      style={
-                        isLeft
-                          ? { borderLeftColor: navColor }
-                          : { borderRightColor: navColor }
-                      }
-                    />
 
-                    {/* Resume Card */}
-                    <ResumeItem
-                      index={index}
-                      title={item.title}
-                      company={item.company}
-                      startDate={item.startDate}
-                      endDate={item.endDate}
-                      details={item.details}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+  return (
+    <div
+      key={index}
+      className="relative w-full mb-20 md:mb-24"
+      style={{ minHeight: "8rem" }}
+    >
+      {/* Timeline Dot */}
+      <div
+        className="absolute left-4 md:left-1/2 w-6 h-6 border-2 border-white rounded-full z-10"
+        style={{
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          backgroundColor: navColor,
+        }}
+      />
+
+      {/* Card + arrow container */}
+      <div className={containerClasses}>
+{isLeft ? (
+  <>
+    {/* Left card: card first, arrow on right, arrow points right (→) */}
+    <ResumeItem
+      index={index}
+      title={item.title}
+      company={item.company}
+      startDate={item.startDate}
+      endDate={item.endDate}
+      details={item.details}
+    />
+    <div
+      className="w-0 h-0 border-y-[12px] border-y-transparent border-l-[12px]"
+      style={{ borderLeftColor: navColor }}
+    />
+  </>
+) : (
+  <>
+    {/* Right card: arrow first on left, arrow points left (←) */}
+    <div
+      className="w-0 h-0 border-y-[12px] border-y-transparent border-r-[12px]"
+      style={{ borderRightColor: navColor }}
+    />
+    <ResumeItem
+      index={index}
+      title={item.title}
+      company={item.company}
+      startDate={item.startDate}
+      endDate={item.endDate}
+      details={item.details}
+    />
+  </>
+)}
+
+      </div>
+    </div>
+  );
+})}
+
+
           </div>
         </section>
+        
 
         {/* Contact section */}
         <section
           id="contact"
           ref={(el) => (sectionsRef.current["contact"] = el)}
           data-aos="fade-up"
-          className="bg-white rounded-3xl p-12 my-16 shadow-lg text-center scroll-mt-20"
+          className="scroll-mt-16 bg-white rounded-3xl px-4 sm:px-8 py-8 sm:py-12 my-16 shadow-lg"
         >
           <h2 className="text-4xl font-semibold mb-8">Contact</h2>
           <p className="mb-6"></p>
@@ -327,9 +347,10 @@ const scrollToSection = (id) => {
               href="https://www.linkedin.com/in/erika-seto/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center justify-center w-40 h-40 bg-[#CCCCFF] text-white rounded-md hover:bg-[#6495ED] transition select-none"
+              className="flex flex-col items-center justify-center w-28 h-28 sm:w-36 sm:h-36 bg-[#CCCCFF] 
+              text-white rounded-md hover:bg-[#6495ED] transition select-none"
             >
-              <FaLinkedin className="w-20 h-20 mb-1" />
+              <FaLinkedin className="w-12 h-12 sm:w-20 sm:h-20 mb-1" />
               <span className="text-xs font-medium text-center leading-none">
                 LinkedIn
               </span>
@@ -337,9 +358,10 @@ const scrollToSection = (id) => {
 
             <a
               href="mailto:seto.erika@gmail.com"
-              className="flex flex-col items-center justify-center w-40 h-40 bg-[#CCCCFF] text-white rounded-md hover:bg-[#6495ED] transition select-none"
+              className="flex flex-col items-center justify-center w-28 h-28 sm:w-36 sm:h-36 bg-[#CCCCFF] 
+              text-white rounded-md hover:bg-[#6495ED] transition select-none"
             >
-              <HiOutlineMail className="w-20 h-20 mb-1" />
+              <HiOutlineMail className="w-12 h-12 sm:w-20 sm:h-20 mb-1" />
               <span className="text-xs font-medium text-center leading-none">
                 Email
               </span>
