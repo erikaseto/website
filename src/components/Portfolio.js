@@ -225,8 +225,8 @@ const scrollToSection = (id) => {
         >
           <h2 className="text-4xl font-semibold mb-4">About Me</h2>
           <p className="text-lg">
-            I’m a [your role here] passionate about building beautiful and
-            functional web applications.
+            I am a current Master of Science in Software Development student at
+            Boston University with an expected graduation of December 2025.  
           </p>
         </section>
 
