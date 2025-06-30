@@ -1,0 +1,347 @@
+import React, { useEffect, useState, useRef } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import ResumeItem from "./ResumeItem";
+import { FaLinkedin } from "react-icons/fa";
+import { HiOutlineMail } from "react-icons/hi";
+import bgImage from '../spirograph-pattern-drawing-backgrounds-textures-a17aa5-1024.webp'; // Adjust path relative to this file
+
+
+export default function Portfolio() {
+  const [bgColor, setBgColor] = useState("#6495ED"); // start with blue background
+  const [navColor, setNavColor] = useState("#6495ED");
+  const [isPastExperience, setIsPastExperience] = useState(false);
+  const sectionsRef = useRef({});
+  const sectionIds = ["About", "Experience", "Contact"];
+
+  useEffect(() => {
+    AOS.init({ duration: 800, once: true, offset: 100 });
+  }, []);
+
+  const hexToRgb = (hex) => {
+    const bigint = parseInt(hex.slice(1), 16);
+    return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+  };
+
+  const rgbToHex = ([r, g, b]) =>
+    `#${[r, g, b]
+      .map((x) => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+      })
+      .join("")}`;
+
+  const interpolateColor = (color1, color2, factor) => {
+    const c1 = hexToRgb(color1);
+    const c2 = hexToRgb(color2);
+    const result = c1.map((c, i) => Math.round(c + factor * (c2[i] - c)));
+    return rgbToHex(result);
+  };
+
+useEffect(() => {
+  AOS.init({ duration: 800, once: false, offset: 100 });
+
+  const handleScroll = () => {
+    const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+
+    const viewportBottom = scrollY + windowHeight;
+
+    const snapshotEl = sectionsRef.current["snapshot"];
+    const snapshotBottom = snapshotEl ? snapshotEl.offsetTop + snapshotEl.offsetHeight : 0;
+
+    const contactTop = sectionsRef.current["contact"]?.offsetTop ?? 0;
+
+    if (viewportBottom < snapshotBottom) {
+      // While snapshot section is still visible: gradient background
+      setBgColor("linear-gradient(135deg, #6495ED 0%, #FFFFFF 50%)");
+      setNavColor("#6495ED");
+      setIsPastExperience(false);
+    } else {
+      // After snapshot section passed: transition solid background colors as before
+      setIsPastExperience(viewportBottom >= contactTop);
+
+      const aboutTop = sectionsRef.current["about"]?.offsetTop ?? 0;
+
+      if (viewportBottom < aboutTop) {
+        setBgColor("#6495ED");
+        setNavColor("#6495ED");
+      } else if (viewportBottom < contactTop) {
+        const factor = Math.min(
+          1,
+          (viewportBottom - aboutTop) / (contactTop - aboutTop)
+        );
+        const bg = interpolateColor("#6495ED", "#CCCCFF", factor);
+        setBgColor(bg);
+
+        const navCol = interpolateColor("#6495ED", "#CCCCFF", factor);
+        setNavColor(navCol);
+      } else {
+        setBgColor("#CCCCFF");
+        setNavColor("#CCCCFF");
+      }
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  handleScroll();
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
+const scrollToSnapshotEnd = () => {
+  const snapshot = sectionsRef.current["snapshot"];
+  if (snapshot) {
+    const offset = snapshot.offsetTop + snapshot.offsetHeight;
+    window.scrollTo({
+      top: offset,
+      behavior: "smooth",
+    });
+  }
+};
+
+const scrollToSection = (id) => {
+  const section = sectionsRef.current[id];
+  if (section) {
+    const offsetTop = section.offsetTop - 70; // adjust if you have sticky header
+    window.scrollTo({ top: offsetTop, behavior: "smooth" });
+  }
+};
+
+  const experiences = [
+    {
+      title: "District Support Pharmacist",
+      company: "CVS Pharmacy",
+      startDate: "November 2022",
+      endDate: "October 2023",
+      details: [
+        "Reduced patient access delays by managing prior authorization workflows and liaising with physicians and patients.",
+        "Adapted quickly to different pharmacy locations, seamlessly integrating into new teams and workflows while maintaining high standards of patient care and regulatory compliance.",
+        "Ensured compliance with documentation standards during mass vaccination events and contributed to accurate record-keeping for 600+ immunizations daily.",
+      ],
+    },
+    {
+      title: "Staff Pharmacist",
+      company: "Walgreens",
+      startDate: "February 2022",
+      endDate: "November 2022",
+      details: [
+        "Supervised a team of 5 pharmacy technicians, overseeing fulfillment of 1,400+ prescriptions weekly while ensuring operational and regulatory adherence.",
+        "Educated patients on medications, ensuring compliance with HIPAA and pharmacy regulations.",
+        "Maintained up-to-date knowledge of regulatory laws and new pharmaceutical formulations."
+      ],
+    },
+    {
+      title: "Pharmacy Intern",
+      company: "Beth Israel Lahey Health Specialty Pharmacy",
+      startDate: "March 2021",
+      endDate: "May 2021",
+      details: [
+        "Performed detailed compliance audits to ensure adherence to the Accreditation Commission for Health Care (ACHC), The Joint Commission, and Utilization Review Accreditation Commission (URAC) standards.",
+        "Reviewed and documented regulatory changes across multiple state jurisdictions, supporting internal policy alignment and operational compliance.",
+        "Researched and presented policy requirements for opening a home infusion pharmacy to executive leadership."
+      ],
+    },
+    {
+      title: "Pharmacy Intern",
+      company: "CVS Pharmacy",
+      startDate: "March 2017",
+      endDate: "May 2021",
+      details: [
+        "Conducted 200+ weekly patient care calls to ensure medication adherence and address compliance risks.",
+        "Trained new pharmacy technicians on prescription fulfillment and inventory management procedures.",
+        "Resolved third-party payer rejections and facilitated prescription transfers, ensuring continuity of care."
+      ],
+    },
+  ];
+
+  return (
+    <>
+      {/* Full page background with dynamic bgColor */}
+      <div
+        className="fixed top-0 left-0 w-full h-full -z-10 transition-all duration-300 ease-linear"
+        style={{ background: bgColor }}
+      />
+
+      {/* Header with navigation */}
+      <header className="bg-white shadow-md py-6 sticky top-0 z-30 w-full">
+        <div className="max-w-6xl mx-auto flex justify-end items-center px-4">
+          <nav className="space-x-6">
+  {sectionIds.map((id) =>
+    id.toLowerCase() === "about" ? (
+      <button
+        key={id}
+        onClick={scrollToSnapshotEnd}
+        className="hover:underline capitalize transition-colors duration-300"
+        style={{ color: navColor, background: "none", border: "none", cursor: "pointer" }}
+      >
+        {id}
+      </button>
+    ) : (
+      <button
+        key={id}
+        onClick={() => scrollToSection(id.toLowerCase())}
+        className="hover:underline capitalize transition-colors duration-300"
+        style={{ color: navColor, background: "none", border: "none", cursor: "pointer" }}
+      >
+        {id}
+      </button>
+    )
+  )}
+</nav>
+        </div>
+      </header>
+
+      {/* Main content */}
+      <main className="relative z-10 min-h-screen text-gray-900 font-sans max-w-6xl mx-auto">
+        {/* Snapshot section: transparent background so gradient from full bg shows through */}
+        <section
+          id="snapshot"
+          ref={(el) => (sectionsRef.current["snapshot"] = el)}
+          className="relative w-full h-screen flex flex-col justify-center items-center px-4"
+          style={{ backgroundColor: "transparent" }}
+        >
+          <img
+            src={bgImage}
+            alt="Background"
+            className="absolute top-0 left-0 w-full h-full object-cover opacity-20 pointer-events-none"
+            style={{ zIndex: 0 }}
+          />
+
+          <h1 className="text-6xl font-extrabold mb-4 text-white drop-shadow-lg">
+            Erika Seto
+          </h1>
+          <p className="text-2xl font-semibold text-white drop-shadow-md">
+            Software Development Student
+          </p>
+        </section>
+
+        {/* About section */}
+        <section
+          id="about"
+          ref={(el) => (sectionsRef.current["about"] = el)}
+          data-aos="fade-up"
+          className="scroll-mt-16 bg-white rounded-3xl p-12 my-16 shadow-lg"
+
+        >
+          <h2 className="text-4xl font-semibold mb-4">About Me</h2>
+          <p className="text-lg">
+            I’m a [your role here] passionate about building beautiful and
+            functional web applications.
+          </p>
+        </section>
+
+        {/* Experience section */}
+        <section
+          id="experience"
+          ref={(el) => (sectionsRef.current["experience"] = el)}
+          // data-aos="fade-up"
+          className="relative bg-white rounded-3xl px-4 py-12 my-16 shadow-lg scroll-mt-16"
+        >
+          <h2 className="text-4xl font-semibold mb-16 text-center">Experience</h2>
+
+          <div className="relative max-w-4xl mx-auto">
+            {/* Vertical timeline line */}
+            <div
+              className="absolute top-0 left-1/2 transform -translate-x-1/2 h-full w-1 z-0 transition-colors duration-500"
+              style={{ backgroundColor: navColor }}
+            />
+
+            {experiences.map((item, idx) => {
+              const index = idx + 1; // start at 1
+              const isLeft = index % 2 === 1;
+
+              return (
+                <div
+                  key={index}
+                  className={`relative flex justify-${
+                    isLeft ? "start" : "end"
+                  } mb-20 md:mb-24 w-full`}
+                  style={{ minHeight: "8rem" }}
+                >
+                  {/* Dot aligned vertically centered to the card */}
+                  <div
+                    className="absolute left-1/2 w-6 h-6 border-2 border-white rounded-full z-10"
+                    style={{
+                      top: "50%",
+                      transform: "translate(-50%, -50%)",
+                      backgroundColor: navColor,
+                    }}
+                  />
+
+                  {/* Pointer + Card container */}
+                  <div
+                    className={`flex items-center ${
+                      isLeft ? "flex-row-reverse" : "flex-row"
+                    } w-full max-w-3xl md:w-1/2 px-6`}
+                    style={{ gap: "1rem" }}
+                  >
+                    {/* Pointer triangle aligned vertically center with dot */}
+                    <div
+                      className={`w-0 h-0 border-y-[12px] border-y-transparent z-10 self-center ${
+                        isLeft ? "border-l-[12px]" : "border-r-[12px]"
+                      }`}
+                      style={
+                        isLeft
+                          ? { borderLeftColor: navColor }
+                          : { borderRightColor: navColor }
+                      }
+                    />
+
+                    {/* Resume Card */}
+                    <ResumeItem
+                      index={index}
+                      title={item.title}
+                      company={item.company}
+                      startDate={item.startDate}
+                      endDate={item.endDate}
+                      details={item.details}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Contact section */}
+        <section
+          id="contact"
+          ref={(el) => (sectionsRef.current["contact"] = el)}
+          data-aos="fade-up"
+          className="bg-white rounded-3xl p-12 my-16 shadow-lg text-center scroll-mt-20"
+        >
+          <h2 className="text-4xl font-semibold mb-8">Contact</h2>
+          <p className="mb-6"></p>
+
+          <div className="flex justify-center space-x-8">
+            <a
+              href="https://www.linkedin.com/in/erika-seto/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center justify-center w-40 h-40 bg-[#CCCCFF] text-white rounded-md hover:bg-[#6495ED] transition select-none"
+            >
+              <FaLinkedin className="w-20 h-20 mb-1" />
+              <span className="text-xs font-medium text-center leading-none">
+                LinkedIn
+              </span>
+            </a>
+
+            <a
+              href="mailto:seto.erika@gmail.com"
+              className="flex flex-col items-center justify-center w-40 h-40 bg-[#CCCCFF] text-white rounded-md hover:bg-[#6495ED] transition select-none"
+            >
+              <HiOutlineMail className="w-20 h-20 mb-1" />
+              <span className="text-xs font-medium text-center leading-none">
+                Email
+              </span>
+            </a>
+          </div>
+        </section>
+
+        <footer className="text-center py-6 text-sm text-gray-500 mb-10">
+          &copy; {new Date().getFullYear()} Erika Seto. All rights reserved.
+        </footer>
+      </main>
+    </>
+  );
+}
