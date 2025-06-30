@@ -5,11 +5,11 @@ import ResumeItem from "./ResumeItem";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { FaLinkedin } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
-import bgImage from '../spirograph-pattern-drawing-backgrounds-textures-a17aa5-1024.webp'; // Adjust path relative to this file
+import bgImage from '../spirograph-pattern-drawing-backgrounds-textures-a17aa5-1024.webp';
 
 
 export default function Portfolio() {
-  const [bgColor, setBgColor] = useState("#6495ED"); // start with blue background
+  const [bgColor, setBgColor] = useState("#6495ED"); 
   const [navColor, setNavColor] = useState("#6495ED");
   const [isPastExperience, setIsPastExperience] = useState(false);
   const sectionsRef = useRef({});
@@ -56,12 +56,12 @@ export default function Portfolio() {
       const contactTop = sectionsRef.current["contact"]?.offsetTop ?? 0;
 
       if (viewportBottom < snapshotBottom) {
-        // While snapshot section is still visible: gradient background
+        // While snapshot section is still visible
         setBgColor("#6495ED");
         setNavColor("#6495ED");
         setIsPastExperience(false);
       } else {
-        // After snapshot section passed: transition solid background colors as before
+        // After snapshot section passed: transition solid background colors
         setIsPastExperience(viewportBottom >= contactTop);
 
         const aboutTop = sectionsRef.current["about"]?.offsetTop ?? 0;
@@ -105,7 +105,7 @@ export default function Portfolio() {
   const scrollToSection = (id) => {
     const section = sectionsRef.current[id];
     if (section) {
-      const offsetTop = section.offsetTop - 70; // adjust if you have sticky header
+      const offsetTop = section.offsetTop - 70; // adjust for sticky header
       window.scrollTo({ top: offsetTop, behavior: "smooth" });
     }
   };
@@ -230,7 +230,7 @@ export default function Portfolio() {
 
       {/* Main content */}
       <main className="relative z-10 min-h-screen text-gray-900 font-sans max-w-6xl mx-auto">
-        {/* Snapshot section: transparent background so gradient from full bg shows through */}
+        {/* Snapshot section: transparent background*/}
         <section
           id="snapshot"
           ref={(el) => (sectionsRef.current["snapshot"] = el)}
