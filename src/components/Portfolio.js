@@ -264,7 +264,7 @@ const scrollToSection = (id) => {
         >
           <h2 className="text-4xl font-semibold mb-4">About Me</h2>
           <p className="text-lg text-left mb-6">
-            I am a pharmacist currently pursuing a Master of Science in Software Engineering at Boston University, 
+            I am a pharmacist currently pursuing a Master of Science in Software Development at Boston University, 
             with an expected graduation date of December 2025. 
             I bring a unique blend of clinical skills and expertise in regulatory compliance, 
             policy interpretation, and accreditation standards compliance, 
