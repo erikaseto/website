@@ -316,53 +316,44 @@ const scrollToSection = (id) => {
 
 
       {/* Card + arrow container */}
+<div
+  className={`
+    flex flex-col md:flex-row items-center gap-4
+    w-full md:w-1/2 md:max-w-3xl
+    px-4 md:px-6
+    ${isLeft ? "md:ml-0 md:mr-auto" : "md:ml-auto md:mr-0"}
+  `}
+>
+  {/* Left-side arrow for right-side card */}
+  {!isLeft && (
+    <div className="hidden md:flex items-center">
       <div
-        className={`
-          flex items-center gap-4
-          w-full md:w-1/2 md:max-w-3xl
-          pl-14 pr-4 md:px-6
-          ${isLeft ? "flex-row md:ml-0 md:mr-auto" : "flex-row md:ml-auto md:mr-0"}
-        `}
-      >
-        {isLeft ? (
-          <>
-            {/* Left card: card first, arrow on right */}
-            <ResumeItem
-              index={index}
-              title={item.title}
-              company={item.company}
-              startDate={item.startDate}
-              endDate={item.endDate}
-              details={item.details}
-            />
-            {/* Arrow on right side, pointing right */}
-            <div className="hidden md:flex items-center">
-              <div
-                className="w-0 h-0 border-y-[12px] border-y-transparent border-l-[12px]"
-                style={{ borderLeftColor: navColor }}
-              />
-            </div>
-          </>
-        ) : (
-          <>
-            {/* Right card: arrow first on left, pointing left */}
-            <div className="hidden md:flex items-center">
-              <div
-                className="w-0 h-0 border-y-[12px] border-y-transparent border-r-[12px]"
-                style={{ borderRightColor: navColor }}
-              />
-            </div>
-            <ResumeItem
-              index={index}
-              title={item.title}
-              company={item.company}
-              startDate={item.startDate}
-              endDate={item.endDate}
-              details={item.details}
-            />
-          </>
-        )}
-      </div>
+        className="w-0 h-0 border-y-[12px] border-y-transparent border-r-[12px]"
+        style={{ borderRightColor: navColor }}
+      />
+    </div>
+  )}
+
+  {/* Card itself */}
+  <ResumeItem
+    index={index}
+    title={item.title}
+    company={item.company}
+    startDate={item.startDate}
+    endDate={item.endDate}
+    details={item.details}
+  />
+
+  {/* Right-side arrow for left-side card */}
+  {isLeft && (
+    <div className="hidden md:flex items-center">
+      <div
+        className="w-0 h-0 border-y-[12px] border-y-transparent border-l-[12px]"
+        style={{ borderLeftColor: navColor }}
+      />
+    </div>
+  )}
+</div>
     </div>
   );
 })}
