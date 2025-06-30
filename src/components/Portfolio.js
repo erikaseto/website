@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import ResumeItem from "./ResumeItem";
+import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { FaLinkedin } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import bgImage from '../spirograph-pattern-drawing-backgrounds-textures-a17aa5-1024.webp'; // Adjust path relative to this file
@@ -13,6 +14,8 @@ export default function Portfolio() {
   const [isPastExperience, setIsPastExperience] = useState(false);
   const sectionsRef = useRef({});
   const sectionIds = ["About", "Experience", "Contact"];
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
 
   useEffect(() => {
     AOS.init({ duration: 800, once: true, offset: 100 });
@@ -54,7 +57,7 @@ useEffect(() => {
 
     if (viewportBottom < snapshotBottom) {
       // While snapshot section is still visible: gradient background
-      setBgColor("linear-gradient(135deg, #6495ED 0%, #FFFFFF 50%)");
+      setBgColor("#6495ED");
       setNavColor("#6495ED");
       setIsPastExperience(false);
     } else {
@@ -167,14 +170,15 @@ const scrollToSection = (id) => {
       {/* Header with navigation */}
       <header className="bg-white shadow-md py-6 sticky top-0 z-30 w-full">
         <div className="max-w-6xl mx-auto flex justify-end items-center px-4">
-          <nav className="space-x-6">
+  {/* Desktop nav */}
+<nav className="hidden md:flex space-x-6">
   {sectionIds.map((id) =>
     id.toLowerCase() === "about" ? (
       <button
         key={id}
         onClick={scrollToSnapshotEnd}
         className="hover:underline capitalize transition-colors duration-300"
-        style={{ color: navColor, background: "none", border: "none", cursor: "pointer" }}
+        style={{ color: navColor }}
       >
         {id}
       </button>
@@ -183,13 +187,46 @@ const scrollToSection = (id) => {
         key={id}
         onClick={() => scrollToSection(id.toLowerCase())}
         className="hover:underline capitalize transition-colors duration-300"
-        style={{ color: navColor, background: "none", border: "none", cursor: "pointer" }}
+        style={{ color: navColor }}
       >
         {id}
       </button>
     )
   )}
 </nav>
+
+{/* Mobile hamburger */}
+<div className="md:hidden relative">
+  <button
+    onClick={() => setIsMenuOpen(!isMenuOpen)}
+    className="text-2xl text-black focus:outline-none"
+  >
+    {isMenuOpen ? <HiOutlineX /> : <HiOutlineMenu />}
+  </button>
+
+  {/* Dropdown menu */}
+  {isMenuOpen && (
+    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+      <ul className="flex flex-col space-y-2 p-4">
+        {sectionIds.map((id) => (
+          <li key={id}>
+            <button
+              onClick={() => {
+                setIsMenuOpen(false);
+                if (id.toLowerCase() === "about") scrollToSnapshotEnd();
+                else scrollToSection(id.toLowerCase());
+              }}
+              className="block w-full text-left text-gray-800 hover:text-blue-500"
+            >
+              {id}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+</div>
+
         </div>
       </header>
 
@@ -261,15 +298,6 @@ const scrollToSection = (id) => {
   const index = idx + 1;
   const isLeft = index % 2 === 1;
 
-  const containerClasses = `
-  flex items-center gap-4
-  w-full md:w-1/2 md:max-w-3xl
-  pl-14 pr-4 md:px-6
-  flex-row
-  md:${isLeft ? "flex-row ml-0 mr-auto" : "flex-row-reverse ml-auto mr-0"}
-`;
-
-
   return (
     <div
       key={index}
@@ -277,55 +305,68 @@ const scrollToSection = (id) => {
       style={{ minHeight: "8rem" }}
     >
       {/* Timeline Dot */}
-      <div
-        className="absolute left-4 md:left-1/2 w-6 h-6 border-2 border-white rounded-full z-10"
-        style={{
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          backgroundColor: navColor,
-        }}
-      />
+<div
+  className="hidden md:block absolute left-1/2 w-6 h-6 border-2 border-white rounded-full z-10"
+  style={{
+    top: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: navColor,
+  }}
+/>
+
 
       {/* Card + arrow container */}
-      <div className={containerClasses}>
-{isLeft ? (
-  <>
-    {/* Left card: card first, arrow on right, arrow points right (→) */}
-    <ResumeItem
-      index={index}
-      title={item.title}
-      company={item.company}
-      startDate={item.startDate}
-      endDate={item.endDate}
-      details={item.details}
-    />
-    <div
-      className="w-0 h-0 border-y-[12px] border-y-transparent border-l-[12px]"
-      style={{ borderLeftColor: navColor }}
-    />
-  </>
-) : (
-  <>
-    {/* Right card: arrow first on left, arrow points left (←) */}
-    <div
-      className="w-0 h-0 border-y-[12px] border-y-transparent border-r-[12px]"
-      style={{ borderRightColor: navColor }}
-    />
-    <ResumeItem
-      index={index}
-      title={item.title}
-      company={item.company}
-      startDate={item.startDate}
-      endDate={item.endDate}
-      details={item.details}
-    />
-  </>
-)}
-
+      <div
+        className={`
+          flex items-center gap-4
+          w-full md:w-1/2 md:max-w-3xl
+          pl-14 pr-4 md:px-6
+          ${isLeft ? "flex-row md:ml-0 md:mr-auto" : "flex-row md:ml-auto md:mr-0"}
+        `}
+      >
+        {isLeft ? (
+          <>
+            {/* Left card: card first, arrow on right */}
+            <ResumeItem
+              index={index}
+              title={item.title}
+              company={item.company}
+              startDate={item.startDate}
+              endDate={item.endDate}
+              details={item.details}
+            />
+            {/* Arrow on right side, pointing right */}
+            <div className="hidden md:flex items-center">
+              <div
+                className="w-0 h-0 border-y-[12px] border-y-transparent border-l-[12px]"
+                style={{ borderLeftColor: navColor }}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Right card: arrow first on left, pointing left */}
+            <div className="hidden md:flex items-center">
+              <div
+                className="w-0 h-0 border-y-[12px] border-y-transparent border-r-[12px]"
+                style={{ borderRightColor: navColor }}
+              />
+            </div>
+            <ResumeItem
+              index={index}
+              title={item.title}
+              company={item.company}
+              startDate={item.startDate}
+              endDate={item.endDate}
+              details={item.details}
+            />
+          </>
+        )}
       </div>
     </div>
   );
 })}
+
 
 
           </div>
