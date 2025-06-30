@@ -17,8 +17,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "build": "cross-env PUBLIC_URL=. react-scripts build && rm -rf docs && mv build docs"
+    "build": "cross-env PUBLIC_URL=. react-scripts build"
   },
+
   "eslintConfig": {
     "extends": [
       "react-app",
