@@ -41,76 +41,74 @@ export default function Portfolio() {
     return rgbToHex(result);
   };
 
-useEffect(() => {
-  AOS.init({ duration: 800, once: false, offset: 100 });
+  useEffect(() => {
+    AOS.init({ duration: 800, once: false, offset: 100 });
 
-  const handleScroll = () => {
-    const scrollY = window.scrollY;
-    const windowHeight = window.innerHeight;
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
 
-    const viewportBottom = scrollY + windowHeight;
+      const viewportBottom = scrollY + windowHeight;
 
-    const snapshotEl = sectionsRef.current["snapshot"];
-    const snapshotBottom = snapshotEl ? snapshotEl.offsetTop + snapshotEl.offsetHeight : 0;
+      const snapshotEl = sectionsRef.current["snapshot"];
+      const snapshotBottom = snapshotEl ? snapshotEl.offsetTop + snapshotEl.offsetHeight : 0;
 
-    const contactTop = sectionsRef.current["contact"]?.offsetTop ?? 0;
+      const contactTop = sectionsRef.current["contact"]?.offsetTop ?? 0;
 
-    if (viewportBottom < snapshotBottom) {
-      // While snapshot section is still visible: gradient background
-      setBgColor("#6495ED");
-      setNavColor("#6495ED");
-      setIsPastExperience(false);
-    } else {
-      // After snapshot section passed: transition solid background colors as before
-      setIsPastExperience(viewportBottom >= contactTop);
-
-      const aboutTop = sectionsRef.current["about"]?.offsetTop ?? 0;
-
-      if (viewportBottom < aboutTop) {
+      if (viewportBottom < snapshotBottom) {
+        // While snapshot section is still visible: gradient background
         setBgColor("#6495ED");
         setNavColor("#6495ED");
-      } else if (viewportBottom < contactTop) {
-        const factor = Math.min(
-          1,
-          (viewportBottom - aboutTop) / (contactTop - aboutTop)
-        );
-        const bg = interpolateColor("#6495ED", "#CCCCFF", factor);
-        setBgColor(bg);
-
-        const navCol = interpolateColor("#6495ED", "#CCCCFF", factor);
-        setNavColor(navCol);
+        setIsPastExperience(false);
       } else {
-        setBgColor("#CCCCFF");
-        setNavColor("#CCCCFF");
+        // After snapshot section passed: transition solid background colors as before
+        setIsPastExperience(viewportBottom >= contactTop);
+
+        const aboutTop = sectionsRef.current["about"]?.offsetTop ?? 0;
+
+        if (viewportBottom < aboutTop) {
+          setBgColor("#6495ED");
+          setNavColor("#6495ED");
+        } else if (viewportBottom < contactTop) {
+          const factor = Math.min(
+            1,
+            (viewportBottom - aboutTop) / (contactTop - aboutTop)
+          );
+          const bg = interpolateColor("#6495ED", "#CCCCFF", factor);
+          setBgColor(bg);
+
+          const navCol = interpolateColor("#6495ED", "#CCCCFF", factor);
+          setNavColor(navCol);
+        } else {
+          setBgColor("#CCCCFF");
+          setNavColor("#CCCCFF");
+        }
       }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToSnapshotEnd = () => {
+    const snapshot = sectionsRef.current["snapshot"];
+    if (snapshot) {
+      const offset = snapshot.offsetTop + snapshot.offsetHeight;
+      window.scrollTo({
+        top: offset,
+        behavior: "smooth",
+      });
     }
   };
 
-  window.addEventListener("scroll", handleScroll);
-  handleScroll();
-  return () => window.removeEventListener("scroll", handleScroll);
-}, []);
-
-const scrollToSnapshotEnd = () => {
-  const snapshot = sectionsRef.current["snapshot"];
-  if (snapshot) {
-    const offset = snapshot.offsetTop + snapshot.offsetHeight;
-    window.scrollTo({
-      top: offset,
-      behavior: "smooth",
-    });
-  }
-};
-
-const scrollToSection = (id) => {
-  const section = sectionsRef.current[id];
-  if (section) {
-    const offsetTop = section.offsetTop - 70; // adjust if you have sticky header
-    window.scrollTo({ top: offsetTop, behavior: "smooth" });
-  }
-};
-
-
+  const scrollToSection = (id) => {
+    const section = sectionsRef.current[id];
+    if (section) {
+      const offsetTop = section.offsetTop - 70; // adjust if you have sticky header
+      window.scrollTo({ top: offsetTop, behavior: "smooth" });
+    }
+  };
 
   const experiences = [
     {
@@ -170,64 +168,64 @@ const scrollToSection = (id) => {
       {/* Header with navigation */}
       <header className="bg-white shadow-md py-6 sticky top-0 z-30 w-full">
         <div className="max-w-6xl mx-auto flex justify-end items-center px-4">
-  {/* Desktop nav */}
-<nav className="hidden md:flex space-x-6">
-  {sectionIds.map((id) =>
-    id.toLowerCase() === "about" ? (
-      <button
-        key={id}
-        onClick={scrollToSnapshotEnd}
-        className="hover:underline capitalize transition-colors duration-300"
-        style={{ color: navColor }}
-      >
-        {id}
-      </button>
-    ) : (
-      <button
-        key={id}
-        onClick={() => scrollToSection(id.toLowerCase())}
-        className="hover:underline capitalize transition-colors duration-300"
-        style={{ color: navColor }}
-      >
-        {id}
-      </button>
-    )
-  )}
-</nav>
-
-{/* Mobile hamburger */}
-<div className="md:hidden relative">
-  <button
-    onClick={() => setIsMenuOpen(!isMenuOpen)}
-    className="text-2xl text-black focus:outline-none"
-  >
-    {isMenuOpen ? <HiOutlineX /> : <HiOutlineMenu />}
-  </button>
-
-  {/* Dropdown menu */}
-  {isMenuOpen && (
-    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
-      <ul className="flex flex-col space-y-2 p-4">
-        {sectionIds.map((id) => (
-          <li key={id}>
+      
+      {/* Desktop nav */}
+      <nav className="hidden md:flex space-x-6">
+        {sectionIds.map((id) =>
+          id.toLowerCase() === "about" ? (
             <button
-              onClick={() => {
-                setIsMenuOpen(false);
-                if (id.toLowerCase() === "about") scrollToSnapshotEnd();
-                else scrollToSection(id.toLowerCase());
-              }}
-              className="block w-full text-left text-gray-800 hover:text-blue-500"
+              key={id}
+              onClick={scrollToSnapshotEnd}
+              className="hover:underline capitalize transition-colors duration-300"
+              style={{ color: navColor }}
             >
               {id}
             </button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )}
-</div>
+          ) : (
+            <button
+              key={id}
+              onClick={() => scrollToSection(id.toLowerCase())}
+              className="hover:underline capitalize transition-colors duration-300"
+              style={{ color: navColor }}
+            >
+              {id}
+            </button>
+          )
+        )}
+      </nav>
 
-        </div>
+      {/* Mobile hamburger */}
+      <div className="md:hidden relative">
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="text-2xl text-black focus:outline-none"
+        >
+          {isMenuOpen ? <HiOutlineX /> : <HiOutlineMenu />}
+        </button>
+
+        {/* Dropdown menu */}
+        {isMenuOpen && (
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+            <ul className="flex flex-col space-y-2 p-4">
+              {sectionIds.map((id) => (
+                <li key={id}>
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      if (id.toLowerCase() === "about") scrollToSnapshotEnd();
+                      else scrollToSection(id.toLowerCase());
+                    }}
+                    className="block w-full text-left text-gray-800 hover:text-blue-500"
+                  >
+                    {id}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+      </div>
       </header>
 
       {/* Main content */}
@@ -294,72 +292,69 @@ const scrollToSection = (id) => {
               style={{ backgroundColor: navColor }}
             />
 
-{experiences.map((item, idx) => {
-  const index = idx + 1;
-  const isLeft = index % 2 === 1;
+            {experiences.map((item, idx) => {
+              const index = idx + 1;
+              const isLeft = index % 2 === 1;
 
-  return (
-    <div
-      key={index}
-      className="relative w-full mb-20 md:mb-24"
-      style={{ minHeight: "8rem" }}
-    >
-      {/* Timeline Dot */}
-<div
-  className="hidden md:block absolute left-1/2 w-6 h-6 border-2 border-white rounded-full z-10"
-  style={{
-    top: "50%",
-    transform: "translate(-50%, -50%)",
-    backgroundColor: navColor,
-  }}
-/>
+              return (
+                <div
+                  key={index}
+                  className="relative w-full mb-20 md:mb-24"
+                  style={{ minHeight: "8rem" }}
+                >
+                  {/* Timeline Dot */}
+            <div
+              className="hidden md:block absolute left-1/2 w-6 h-6 border-2 border-white rounded-full z-10"
+              style={{
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+                backgroundColor: navColor,
+              }}
+            />
 
+            {/* Card + arrow container */}
+            <div
+              className={`
+                flex flex-col md:flex-row items-center gap-4
+                w-full md:w-1/2 md:max-w-3xl
+                px-4 md:px-6
+                ${isLeft ? "md:ml-0 md:mr-auto" : "md:ml-auto md:mr-0"}
+              `}
+            >
 
-      {/* Card + arrow container */}
-<div
-  className={`
-    flex flex-col md:flex-row items-center gap-4
-    w-full md:w-1/2 md:max-w-3xl
-    px-4 md:px-6
-    ${isLeft ? "md:ml-0 md:mr-auto" : "md:ml-auto md:mr-0"}
-  `}
->
-  {/* Left-side arrow for right-side card */}
-  {!isLeft && (
-    <div className="hidden md:flex items-center">
-      <div
-        className="w-0 h-0 border-y-[12px] border-y-transparent border-r-[12px]"
-        style={{ borderRightColor: navColor }}
-      />
-    </div>
-  )}
+            {/* Left-side arrow for right-side card */}
+            {!isLeft && (
+              <div className="hidden md:flex items-center">
+                <div
+                  className="w-0 h-0 border-y-[12px] border-y-transparent border-r-[12px]"
+                  style={{ borderRightColor: navColor }}
+                />
+              </div>
+            )}
 
-  {/* Card itself */}
-  <ResumeItem
-    index={index}
-    title={item.title}
-    company={item.company}
-    startDate={item.startDate}
-    endDate={item.endDate}
-    details={item.details}
-  />
+            {/* Card itself */}
+            <ResumeItem
+              index={index}
+              title={item.title}
+              company={item.company}
+              startDate={item.startDate}
+              endDate={item.endDate}
+              details={item.details}
+            />
 
-  {/* Right-side arrow for left-side card */}
-  {isLeft && (
-    <div className="hidden md:flex items-center">
-      <div
-        className="w-0 h-0 border-y-[12px] border-y-transparent border-l-[12px]"
-        style={{ borderLeftColor: navColor }}
-      />
-    </div>
-  )}
-</div>
-    </div>
-  );
-})}
-
-
-
+            {/* Right-side arrow for left-side card */}
+            {isLeft && (
+              <div className="hidden md:flex items-center">
+                <div
+                  className="w-0 h-0 border-y-[12px] border-y-transparent border-l-[12px]"
+                  style={{ borderLeftColor: navColor }}
+                />
+              </div>
+            )}
+          </div>
+              </div>
+            );
+          })}
           </div>
         </section>
         
