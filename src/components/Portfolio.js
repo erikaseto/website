@@ -224,9 +224,18 @@ const scrollToSection = (id) => {
 
         >
           <h2 className="text-4xl font-semibold mb-4">About Me</h2>
-          <p className="text-lg">
-            I am a current Master of Science in Software Development student at
-            Boston University with an expected graduation of December 2025.  
+          <p className="text-lg text-left mb-6">
+            I am a pharmacist currently pursuing a Master of Science in Software Engineering at Boston University, 
+            with an expected graduation date of December 2025. 
+            I bring a unique blend of clinical skills and expertise in regulatory compliance, 
+            policy interpretation, and accreditation standards compliance, 
+            combined with a strong foundation in software development.
+            </p>
+            <p className="text-lg text-left">
+            Through my coursework—including Information Systems Analysis and Design, Data Structures and Algorithms, 
+            Data Science with Python, and Web Application Development—I have developed solid skills in programming, 
+            problem-solving, and designing efficient systems. I am passionate about leveraging my diverse background 
+            to drive meaningful impact.
           </p>
         </section>
 

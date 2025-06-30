@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "./static/css/main.869c09e6.css",
-    "main.js": "./static/js/main.c8ad9781.js",
-    "static/media/spirograph-pattern-drawing-backgrounds-textures-a17aa5-1024.webp": "./static/media/spirograph-pattern-drawing-backgrounds-textures-a17aa5-1024.f970aa9d080692ed7425.webp",
-    "index.html": "./index.html",
-    "main.869c09e6.css.map": "./static/css/main.869c09e6.css.map",
-    "main.c8ad9781.js.map": "./static/js/main.c8ad9781.js.map"
+    "main.css": "/website/static/css/main.869c09e6.css",
+    "main.js": "/website/static/js/main.e90d2412.js",
+    "static/media/spirograph-pattern-drawing-backgrounds-textures-a17aa5-1024.webp": "/website/static/media/spirograph-pattern-drawing-backgrounds-textures-a17aa5-1024.f970aa9d080692ed7425.webp",
+    "index.html": "/website/index.html",
+    "main.869c09e6.css.map": "/website/static/css/main.869c09e6.css.map",
+    "main.e90d2412.js.map": "/website/static/js/main.e90d2412.js.map"
   },
   "entrypoints": [
     "static/css/main.869c09e6.css",
-    "static/js/main.c8ad9781.js"
+    "static/js/main.e90d2412.js"
   ]
 }
