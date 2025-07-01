@@ -119,7 +119,7 @@ export default function Portfolio() {
       details: [
         "Reduced patient access delays by managing prior authorization workflows and liaising with physicians and patients.",
         "Adapted quickly to different pharmacy locations, seamlessly integrating into new teams and workflows while maintaining high standards of patient care and regulatory compliance.",
-        "Ensured compliance with documentation standards during mass vaccination events and contributed to accurate record-keeping for 600+ immunizations daily.",
+        "Administered and documented 60+ immunizations daily during high-volume vaccination events, ensuring clinical documentation integrity and compliance with record-keeping standards.",
       ],
     },
     {
